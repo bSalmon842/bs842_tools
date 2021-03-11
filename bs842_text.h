@@ -7,6 +7,8 @@ Dependencies:
 / stb_truetype: https://github.com/nothings/stb/blob/master/stb_truetype.h
 */
 
+#ifndef BS842_TEXT_H
+
 #ifndef STB_TRUETYPE_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
@@ -227,3 +229,6 @@ bsint_function void DrawBasicTextElement(void *buffer, stbtt_fontinfo *fontInfo,
     free(contentBitmap);
     free(headBitmap);
 }
+
+#define BS842_TEXT_H
+#endif // BS842_TEXT_H
