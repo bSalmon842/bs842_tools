@@ -20,7 +20,7 @@ Dependencies:
 typedef unsigned __int8 bsint_u8;
 typedef unsigned __int32 bsint_u32;
 typedef __int32 bsint_s32;
-typedef size_t bsint_mem_index;1
+typedef size_t bsint_mem_index;
 typedef float bsint_f32;
 
 inline bsint_s32 bs842_internal_RoundF32ToS32(bsint_f32 value)
