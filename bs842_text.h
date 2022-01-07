@@ -11,7 +11,7 @@ Dependencies:
 
 #ifndef STB_TRUETYPE_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "../stb/stb_truetype.h"
+#include "stb_truetype.h"
 #endif
 
 //// INTERNAL ////
@@ -104,7 +104,7 @@ bsint_function void BS842_CreateTextBitmap(unsigned char *result, stbtt_fontinfo
     }
 }
 
-bsint_function void BS842_DrawTextBitmap(void *buffer, unsigned char *textBitmap, bsint_u32 colour, bsint_f32 charX, bsint_f32 xPosPercent, bsint_f32 yPosPercent, bsint_s32 textSizeX, bsint_s32 textSizeY, bsint_b32 topLeftAlign = false)
+bsint_function void BS842_DrawTextBitmap(void *buffer, unsigned char *textBitmap, bsint_u32 colour, bsint_f32 charX, bsint_f32 xPosPercent, bsint_f32 yPosPercent, bsint_s32 textSizeX, bsint_s32 textSizeY, bsint_b32 topLeftAlign = false, bsint_b32 invertDraw = false)
 {
     Text_BackBuffer *backBuffer = (Text_BackBuffer *)buffer;
     CHECK_TEXT_BACKBUFFER(backBuffer);
@@ -123,7 +123,15 @@ bsint_function void BS842_DrawTextBitmap(void *buffer, unsigned char *textBitmap
         yPos = bs842_text_internal_RoundF32ToS32(backBuffer->height * yPosPercent) - (textSizeY / 2);
     }
     
-    bsint_u8 *row = (bsint_u8 *)backBuffer->memory + (xPos * BITMAP_BYTES_PER_PIXEL) + (yPos * backBuffer->pitch);
+    bsint_u8 *row = 0;
+    if (invertDraw)
+    {
+        row = (bsint_u8 *)backBuffer->memory + (xPos * BITMAP_BYTES_PER_PIXEL) + ((yPos + textSizeY) * backBuffer->pitch);
+    }
+    else
+    {
+         row = (bsint_u8 *)backBuffer->memory + (xPos * BITMAP_BYTES_PER_PIXEL) + (yPos * backBuffer->pitch);
+    }
     for (bsint_s32 y = 0; y < textSizeY; ++y)
     {
         bsint_u32 *pixel = (bsint_u32 *)row;
@@ -147,7 +155,14 @@ bsint_function void BS842_DrawTextBitmap(void *buffer, unsigned char *textBitmap
             }
         }
         
-        row += backBuffer->pitch;
+        if (invertDraw)
+        {
+            row -= backBuffer->pitch;
+        }
+        else
+        {
+            row += backBuffer->pitch;
+        }
     }
 }
 
@@ -194,7 +209,7 @@ bsint_function void BS842_DrawTextBitmap(void *buffer, unsigned char *textBitmap
     }
 }
 
-bsint_function void BS842_DrawBasicTextElement(void *buffer, stbtt_fontinfo *fontInfo, bsint_f32 sizeRatio, bsint_f32 xPosPercent, bsint_f32 yPosPercent, bsint_s32 textSizeX, bsint_f32 lineHeight, char *text, bsint_u32 colour)
+bsint_function void BS842_DrawBasicTextElement(void *buffer, stbtt_fontinfo *fontInfo, bsint_f32 sizeRatio, bsint_f32 xPosPercent, bsint_f32 yPosPercent, bsint_s32 textSizeX, bsint_f32 lineHeight, char *text, bsint_u32 colour, bsint_b32 topLeftAlign = false, bsint_b32 invertDraw = false)
 {
     Text_BackBuffer *backBuffer = (Text_BackBuffer *)buffer;
     CHECK_TEXT_BACKBUFFER(backBuffer);
@@ -208,7 +223,7 @@ bsint_function void BS842_DrawBasicTextElement(void *buffer, stbtt_fontinfo *fon
     
     bsint_f32 charX = 0;
     BS842_CreateTextBitmap(bitmap, fontInfo, text, lineHeight, textSizeX, &charX);
-    BS842_DrawTextBitmap(backBuffer, bitmap, colour, charX, xPosPercent, yPosPercent, textSizeX, textSizeY);
+    BS842_DrawTextBitmap(backBuffer, bitmap, colour, charX, xPosPercent, yPosPercent, textSizeX, textSizeY, topLeftAlign, invertDraw);
     free(bitmap);
 }
 
