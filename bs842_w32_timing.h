@@ -87,7 +87,7 @@ Returns the current Frames Per Second value based on the MS Per Frame value
 
 */
 
-#ifndef BS842_INCLUDE_BS842_W32TIMING_H
+#ifndef BS842_INCLUDE_BS842_W32_TIMING_H
 
 #ifdef __cplusplus
 extern "C"
