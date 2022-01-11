@@ -87,7 +87,7 @@ Returns the current Frames Per Second value based on the MS Per Frame value
 
 */
 
-#ifndef BS842_INCLUDE_BS842_W32_TIMING_H
+#ifndef BS842_INCLUDE_BS842_W32TIMING_H
 
 #ifdef __cplusplus
 extern "C"
@@ -202,10 +202,10 @@ BSDEF void BS842_Timing_Init()
     unsigned int schedulerGranularity = 1;
     bs842_timing_internal_info.sleepIsGranular = (timeBeginPeriod(schedulerGranularity) == TIMERR_NOERROR);
     
+    bs842_timing_internal_info.initialised = true;
+    
     bs842_timing_internal_info.lastCounter = BS842_Timing_GetClock();
     bs842_timing_internal_info.lastSecPerFrame = 1.0f / 60.0f;
-    
-    bs842_timing_internal_info.initialised = true;
 }
 
 BSDEF void BS842_Timing_ChangeRefreshRate(HDC deviceContext, bool vsync, int refreshRateHz)
